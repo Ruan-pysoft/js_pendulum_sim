@@ -1,5 +1,9 @@
 const Tau = 2 * 3.14159;
 
+function threeDigits(n) {
+    return Math.round(n * 1000) / 1000;
+}
+
 const metreFactor = 200; // pixels in a metre
 
 const anchorX = 250;
@@ -14,8 +18,12 @@ var g = 9.81; // m/s^2
 // air
 //var mu = 1.8e-5; // viscosity (Pa * s)
 // water
-var mu = 1e-3; // viscosity (Pa * s)
+//var mu = 1e-3; // viscosity (Pa * s)
+// fluid much more viscous than water needed to slow down a 4kg steel ball appreciably
+// sunflower oil (according to wikipedia)
+var mu = 0.04914; // viscosity (Pa * s)
 var theta = Tau/4 / 2; // angle from vertical (rad)
+var maxAngle = theta;
 var omega = 0; // angular velocity (rad/s)
 var t = NaN; // period (s)
 var lastInflection = NaN;
@@ -79,6 +87,8 @@ function physics(delta, time) {
 		t = time - lastInflection;
 		t *= 2; // only half a period has occurred since last local maximum height
 		lastInflection = time;
+
+		maxAngle = Math.max(Math.abs(theta), Math.abs(prevTheta));
 	}
 }
 
@@ -90,21 +100,23 @@ function display(delta) {
 	const rDisplay = document.getElementById("rDisplay");
 	rDisplay.innerHTML = r + "m";
 	const mDisplay = document.getElementById("mDisplay");
-	mDisplay.innerHTML = m + "kg";
+	mDisplay.innerHTML = threeDigits(m) + "kg";
 	const gDisplay = document.getElementById("gDisplay");
 	gDisplay.innerHTML = g + "m/s²";
 	const muDisplay = document.getElementById("muDisplay");
 	muDisplay.innerHTML = mu + "Pa s";
 	const thetaDisplay = document.getElementById("thetaDisplay");
-	thetaDisplay.innerHTML = theta + " rad";
+	thetaDisplay.innerHTML = threeDigits(theta) + " rad";
+	const maxAngleDisplay = document.getElementById("maxAngleDisplay");
+	maxAngleDisplay.innerHTML = threeDigits(maxAngle) + " rad";
 	const omegaDisplay = document.getElementById("omegaDisplay");
-	omegaDisplay.innerHTML = omega + " rad/s";
+	omegaDisplay.innerHTML = threeDigits(omega) + " rad/s";
 	const tDisplay = document.getElementById("tDisplay");
 	tDisplay.innerHTML = (t / 1000) + "s";
 	const model1Display = document.getElementById("model1Display");
-	model1Display.innerHTML = model1();
+	model1Display.innerHTML = threeDigits(model1());
 	const model2Display = document.getElementById("model2Display");
-	model2Display.innerHTML = model2();
+	model2Display.innerHTML = threeDigits(model2());
 }
 
 const backbuffer = document.createElement("canvas");
