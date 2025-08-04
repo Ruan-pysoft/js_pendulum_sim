@@ -26,7 +26,10 @@ function model1() {
 }
 function model2() {
 	const v = omega * l;
-	const predictedT = ((m*g/v/v/mu)*Math.cos(theta) - 1/l/mu) * 1000; // working in milliseconds
+	// tension = outwards pull from gravity - inwards force from simple harmonic motion
+	// (assumes simple harmonic motion)
+	const tension = m*g*Math.cos(theta) - m*v*v/l;
+	const predictedT = (tension/v/v/mu) * 1000; // working in milliseconds
 	const constant = t/predictedT;
 
 	return constant;
