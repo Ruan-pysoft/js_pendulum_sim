@@ -77,9 +77,14 @@ function display(delta) {
 	model2Display.innerHTML = model2();
 }
 
+const backbuffer = document.createElement("canvas");
 var displayTimer = 0;
 function draw(canvas, delta, time) {
 	const ctx = canvas.getContext("2d");
+	const backCtx = backbuffer.getContext("2d");
+
+	backCtx.clearRect(0, 0, canvas.width, canvas.height);
+	backCtx.drawImage(canvas, 0, 0);
 
 	if (delta == 0) return;
 	if (delta > 100) {
@@ -96,8 +101,10 @@ function draw(canvas, delta, time) {
 		displayTimer -= 100;
 	}
 
-	//ctx.fillStyle = "black";
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	ctx.globalAlpha = 0.9;
+	ctx.drawImage(backbuffer, 0, 0);
+	ctx.globalAlpha = 1;
 
 	const x = anchorX + l*metreFactor*Math.sin(theta);
 	const y = anchorY + l*metreFactor*Math.cos(theta);
@@ -109,14 +116,19 @@ function draw(canvas, delta, time) {
 	ctx.lineTo(x, y);
 	ctx.stroke();
 
+	ctx.strokeStyle = "black";
+	ctx.lineWidth = 1;
 	ctx.fillStyle = "red";
 	ctx.beginPath();
 	ctx.ellipse(x, y, r*metreFactor, r*metreFactor, 0, 0, Tau);
+	ctx.stroke();
 	ctx.fill();
 }
 
 function init() {
 	const canvas = document.getElementById("draw");
+	backbuffer.width = canvas.width;
+	backbuffer.height = canvas.height;
 
 	var t = Date.now();
 
