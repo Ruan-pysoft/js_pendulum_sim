@@ -14,10 +14,9 @@ var g = 9.81; // m/s^2
 // air
 //var mu = 1.8e-5; // viscosity (Pa * s)
 // water
-//var mu = 1e-3; // viscosity (Pa * s)
-var mu = 0.1; // viscosity (Pa * s)
+var mu = 1e-3; // viscosity (Pa * s)
 var theta = Tau/4 / 2; // angle from vertical (rad)
-var omega = 0.1; // angular velocity (rad/s)
+var omega = 0; // angular velocity (rad/s)
 var t = NaN; // period (s)
 var lastInflection = NaN;
 
@@ -38,8 +37,11 @@ function model2() {
 	return constant;
 }
 
+var prevTheta = theta; // angle from vertical (rad)
+var prevDelta = 0;
 function physics(delta, time) {
 	const dt = delta / 1000;
+	const pdt = prevDelta / 1000;
 
 	const prevOmega = omega;
 
@@ -59,8 +61,19 @@ function physics(delta, time) {
 	// or in this case, angular acceleration = torque/mass
 	const alpha = (T_g + T_d) / m;
 
-	omega += alpha * dt;
-	theta += omega * dt;
+
+	// use Verlet integration (https://en.wikipedia.org/wiki/Verlet_integration#Non-constant_time_differences)
+	// rather than simple Euler integration
+	const oldTheta = theta;
+	if (pdt === 0) {
+		theta += omega*dt + 0.5*alpha*dt*dt;
+	} else {
+		theta += (theta - prevTheta)*(dt/pdt) + alpha*dt*(dt + pdt)/2;
+	}
+	prevTheta = oldTheta;
+	prevDelta = delta;
+
+	omega = (theta - prevTheta)/dt;
 
 	if ((omega < 0) != (prevOmega < 0)) {
 		t = time - lastInflection;
