@@ -1,12 +1,15 @@
 const Tau = 2 * 3.14159;
 
-const metreFactor = 100; // pixels in a metre
+const metreFactor = 200; // pixels in a metre
 
 const anchorX = 250;
 const anchorY = 10;
-var l = 2; // m
-var r = 0.1; // m
-var m = 1; // kg
+var l = 1; // m
+var r = 0.05; // m
+var V = 2/3 * Tau * r*r*r; // m^3
+// steel
+var rho = 7.85; // density (g/cm^3)
+var m = (rho / 1000 * 100*100*100) * V; // kg
 var g = 9.81; // m/s^2
 // air
 //var mu = 1.8e-5; // viscosity (Pa * s)
@@ -41,16 +44,27 @@ function physics(delta, time) {
 	const prevOmega = omega;
 
 	// viscous drag (angular damping coefficient)
-	const b = 3 * Tau * mu * r * l * l;
+	// From Stokes' law (https://en.wikipedia.org/wiki/Stokes'_law)
+	const v = omega * l;
+	const F_d = -3 * Tau * mu * r * v;
+	// convert to torque
+	const T_d = F_d * l;
 
-	const alpha = - (b / (m * l * l)) * omega - (g / l) * Math.sin(theta);
+	// gravity tangent to pendulum line (in the direction of the motion)
+	const F_g = - m * g * Math.sin(theta);
+	// convert to torque
+	const T_g = F_g * l;
+
+	// acceleration = force/mass
+	// or in this case, angular acceleration = torque/mass
+	const alpha = (T_g + T_d) / m;
 
 	omega += alpha * dt;
 	theta += omega * dt;
 
 	if ((omega < 0) != (prevOmega < 0)) {
 		t = time - lastInflection;
-		t *= 2; // only half a period has occured since last local maximum height
+		t *= 2; // only half a period has occurred since last local maximum height
 		lastInflection = time;
 	}
 }
