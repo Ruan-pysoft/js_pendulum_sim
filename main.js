@@ -19,14 +19,14 @@ var t = NaN; // period (s)
 var lastInflection = NaN;
 
 function model1() {
-	const predictedT = Math.sqrt(l/g);
+	const predictedT = Math.sqrt(l/g) * 1000; // working in milliseconds
 	const constant = t/predictedT;
 
 	return constant;
 }
 function model2() {
 	const v = omega * l;
-	const predictedT = ((m*g/v/v/mu)*Math.cos(theta) - 1/l/mu);
+	const predictedT = ((m*g/v/v/mu)*Math.cos(theta) - 1/l/mu) * 1000; // working in milliseconds
 	const constant = t/predictedT;
 
 	return constant;
