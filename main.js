@@ -98,7 +98,7 @@ function display(delta) {
 	const lDisplay = document.getElementById("lDisplay");
 	lDisplay.innerHTML = l + "m";
 	const rDisplay = document.getElementById("rDisplay");
-	rDisplay.innerHTML = r + "m";
+	rDisplay.innerHTML = threeDigits(r) + "m";
 	const mDisplay = document.getElementById("mDisplay");
 	mDisplay.innerHTML = threeDigits(m) + "kg";
 	const gDisplay = document.getElementById("gDisplay");

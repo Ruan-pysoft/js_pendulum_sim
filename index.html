@@ -16,14 +16,14 @@
 
 			<p>
 				Δt = <span id="dtDisplay"></span> <br>
-				length = <span id="lDisplay"></span> <br>
-				radius = <span id="rDisplay"></span> <br>
-				mass = <span id="mDisplay"></span> <br>
-				gravitational acceleration = <span id="gDisplay"></span> <br>
-				viscosity = <span id="muDisplay"></span> <br>
-				θ = <span id="thetaDisplay"></span> <br>
+				length = <span id="lDisplay"></span> <button onclick="l = prompt('Select new pendulum length', l);">adjust</button> <br>
+				radius = <span id="rDisplay"></span> <button onclick="r = prompt('Select new pendulum radius', r); V = 2/3 * Tau * r*r*r; m = (rho / 1000 * 100*100*100) * V;">adjust</button> <br>
+				mass = <span id="mDisplay"></span> <button onclick="m = prompt('Select new pendulum mass', m); V = m / (rho / 1000 * 100*100*100); r = Math.pow(V * 3/2 / Tau, 1/3);">adjust</button> <br>
+				gravitational acceleration = <span id="gDisplay"></span> <button onclick="g = prompt('Select new gravitational acceleration', g);">adjust</button> <br>
+				viscosity = <span id="muDisplay"></span> <button onclick="mu = prompt('Select new medium viscosity', mu);">adjust</button> <br>
+				θ = <span id="thetaDisplay"></span> <button onclick="theta = prompt('Select angle from the vertical (fraction of 90°)', theta / Tau * 4) * Tau / 4; prevDelta = 0;">move</button> <br>
 				θ<sub>max</sub> = <span id="maxAngleDisplay"></span> <br>
-				ω = <span id="omegaDisplay"></span> <br>
+				ω = <span id="omegaDisplay"></span> <button onclick="omega = prompt('Select new speed (rad/sec)', omega); prevTheta = theta - omega*prevDelta/1000;">push</button> <br>
 				period = <span id="tDisplay"></span> <br>
 				given t = C sqrt(l/g); C = <span id="model1Display"></span> <br>
 				given t = C(T/(v^2 μ)); C = <span id="model2Display"></span>
